@@ -19,5 +19,5 @@ class Tile(pygame.sprite.Sprite):
         self.rect = self.tile_image.get_rect()  # get the dimension of the image
         self.rect.x, self.rect.y = x, y
 
-    def create_tile(self, surface):
-        surface.blit(self.tile_image, (self.rect.x, self.rect.y))  # blit draw image in another
+    def create_tile(self, canvas):
+        canvas.blit(self.tile_image, (self.rect.x, self.rect.y))  # blit draw image in another

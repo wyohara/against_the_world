@@ -1,0 +1,11 @@
+{
+  "configurations": {
+    "tile_size": 16,
+    "default_move_speed": 16
+  },
+  "colors": {
+    "transparent":[0,0,0],
+    "sky": [0,180,240],
+    "default": [255,255,255]
+  }
+}

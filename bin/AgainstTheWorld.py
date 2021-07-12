@@ -1,11 +1,13 @@
 from abc import ABC
+import os
 
+from bin.LoaderConfig import LoaderConfig
 from bin.configurations.GameConfigurations import GameConfigurations
+from bin.configurations.player_control.PlayerControl import PlayerControl
 from bin.configurations.tile_system.LoaderSpitesheet import LoaderSpritesheet
 from bin.configurations.tile_system.TileMap import TileMap
 
-BLACK = (0, 0, 0)
-COLOR_SKY = (0, 180, 240)
+PATH_SOURCES = os.path.join(os.getcwd(), "sources")
 
 
 class AgainstTheWorld(GameConfigurations, ABC):
@@ -13,19 +15,25 @@ class AgainstTheWorld(GameConfigurations, ABC):
         super().__init__()
 
     def _preloader(self):
-        loader_spritesheet = LoaderSpritesheet("sources/spritesheet/spritesheet.png",
-                                               "sources/spritesheet/spritesheet.json")
-        self.tile_map = TileMap('sources/test_level.csv', loader_spritesheet)
+        # load the sprites
+        loader_spritesheet = LoaderSpritesheet(os.path.join(PATH_SOURCES, "spritesheet/spritesheet.png"),
+                                               os.path.join(PATH_SOURCES, "spritesheet/spritesheet.json"))
+        # load the position tilemap
+        self.tile_map = TileMap(os.path.join(PATH_SOURCES, 'test_level.csv'), loader_spritesheet)
 
         # load the player sprite
-        self.player_img = loader_spritesheet.parse_sprite('chick.png')
+        self.player_sprite = loader_spritesheet.parse_sprite('chick.png')
+        self.player_control = PlayerControl(self.player_sprite, self.game_canvas,
+                                            self.tile_map.player_start_x, self.tile_map.player_start_y)
+        self.player_control.draw_and_move()
 
-    def _running(self):
+    def _on_start_tick(self):
+        # update to remove updated frames
+        self.game_canvas.fill(LoaderConfig().load_colors["sky"])
+        self.tile_map.draw_canvas(self.game_canvas)
 
-        player_pos = self.player_img.get_rect()
-        player_pos.x, player_pos.y = self.tile_map.start_x, self.tile_map.start_y
+    def _add_events(self):
+        self.player_control.handle_keys()
 
-        self.canvas.fill(COLOR_SKY)  # fill the canvas with blue sky
-        self.tile_map.draw_canvas(self.canvas)
-        self.canvas.blit(self.player_img, player_pos)
-        pass
+    def _on_end_tick(self):
+        self.player_control.draw_and_move()

@@ -1,4 +1,4 @@
 from bin.AgainstTheWorld import AgainstTheWorld
 
 if __name__ == '__main__':
-    AgainstTheWorld().run()
+    AgainstTheWorld().start_game()

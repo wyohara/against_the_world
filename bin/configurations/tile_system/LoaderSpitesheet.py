@@ -1,7 +1,9 @@
 import json
 import pygame
 
-TRANSPARENT = (0, 0, 0)
+from bin.LoaderConfig import LoaderConfig
+
+
 INITIAL_POSITION_SPRITE = (0, 0)
 
 
@@ -29,7 +31,7 @@ class LoaderSpritesheet:
         :return: the Tile image as Sprite
         """
         sprite = pygame.Surface((width, height))
-        sprite.set_colorkey(TRANSPARENT)
+        sprite.set_colorkey(LoaderConfig().load_colors["transparent"])
         sprite.blit(self.file_spritesheet_images, INITIAL_POSITION_SPRITE, (axis_x, axis_y, width, height))
         return sprite
 
